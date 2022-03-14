@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Notizen</title>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Architects+Daughter&family=Hubballi&family=Merriweather+Sans:wght@300&display=swap"
+      rel="stylesheet"
+    />
+    <!-- CSS -->
+    <link rel="stylesheet" href="style.css" />
+    <!-- JavaScript -->
+    <script src="script.js"></script>
+  </head>
+
+  <body onload="render()">
+
+    <!-- Navigation -->
+    <nav class="navbar">
+      <div class="nav-container">
+        <span class="nav-logo">FiNotes</span>
+      </div>
+      <div class="nav-container">
+        <a href="#" id="link" onclick="showTrash()">Trash</a>
+        <a href="#info">Info</a>
+      </div>
+    </nav>
+    <!-- END Navigation -->
+
+    <!-- Add New Note -->
+    <div class="form-container" id="add-note">
+      <div class="card">
+        <input onclick="openTextInput()" id="title" type="text" placeholder="Neue Notiz..." />
+        <textarea id="text" class="hidden" placeholder="Notiz..."></textarea>
+        <div id="buttons" class="form-buttons hidden">
+          <button onclick="saveNote()">Hinzufügen</button>
+          <button onclick="clearInput()">Verwerfen</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Notes Container -->
+    <div id="content" class="notes-container"></div>
+
+    <!-- Solving the Footer-Problem (absolute positioned Footer moves over the body, so I need to add space to the body here) -->
+    <div class="footer-space"></div>
+
+    <footer id="info">
+        <span>&copy; i.f. 2022</span> 
+        <a href="#">Kontakt</a> 
+        <a href="#">Info</a>
+    </footer>
+  </body>
+</html>
