@@ -1,4 +1,3 @@
-// Globale Variablen
 let titles = [];
 let notes = [];
 let trash = [];
@@ -6,6 +5,7 @@ let trashView = false;
 
 // get variables from local storage and save thim in arrays above
 load();
+
 
 // HTML TEMPLATES
 
@@ -50,7 +50,23 @@ function editNoteTemplate(i) {
     `
 }
 
-// render
+// render content
+
+function init() {
+
+    let content = document.getElementById('content');
+    let form = document.getElementById('add-note');
+    let navLink = document.getElementById('link');
+    // delete old HTML code
+    content.innerHTML = '';
+    // Show respective folder
+    if (trashView) {
+        renderTrashView(content, form, navLink);
+    } else {
+        renderNotesView(content, form, navLink);
+    }
+}
+
 
 function renderTrashView(content, form, navLink) {
     navLink.innerHTML = 'Notes';
@@ -77,56 +93,37 @@ function renderEditForm(i) {
     overlay.innerHTML = editNoteTemplate(i);
 }
 
-function init() {
-    
-    let content = document.getElementById('content');
-    let form = document.getElementById('add-note');
-    let navLink = document.getElementById('link');
-    
-    // delete old HTML code
-    content.innerHTML = '';
-    
-    if (trashView){
-        renderTrashView(content, form, navLink);
-    }
-    else {
-        renderNotesView(content, form, navLink);
-    }
-}
-
-
 function saveNote () {
     let title = document.getElementById('title').value;
     let text = document.getElementById('text').value;
 
-    // Checken ob Titel- und Textfeld values enthalten
+    // validate if both title and text fields contain values
     if (title && text){
-        titles.push(title);
-        notes.push(text);
+        titles.unshift(title);
+        notes.unshift(text);
 
-        // input fields leeren 
+        // empty input fields leeren 
         title = ''; // warum geht das nicht? (weder mit .value, .innerHTML oder sonstwie aber in Kontaktbuch fkt. es so?)
         text = '';
         clearInput(); // aber das geht?
 
-        // HTML-Inhalt mit aktualisierten Daten neu laden
+        // render HTML with updated data
         init();
-        // Aktualisierte Daten speichern
+        // save updated values
         save();
     }
     else{
         alert('Keine leeren Felder');
     }
 }
-// ENDE: Funktion saveNote()
 
 function clearInput() {
     let title = document.getElementById('title');
     let text = document.getElementById('text');
     let inputField = document.getElementById('text');
-    let formButtons = document.getElementById('buttons'); // wieviele form-buttons elemente?
+    let formButtons = document.getElementById('buttons'); // ...
 
-    inputField.classList.add('hidden'); //genauso für die buttons & ev ändern der placeholder-texte ev ändern des textes für btn2? ...
+    inputField.classList.add('hidden');
     formButtons.classList.add('hidden');
 
     title.placeholder='Neue Notiz...';
@@ -153,7 +150,7 @@ function closeEdit() {
 function saveEdit(i) {
     let title = document.getElementById('edit-title').value;
     let text = document.getElementById('edit-text').value;
-    // Checken ob Titel- und Textfeld values enthalten
+    // validate if both title and text fields contain values
     if (title && text) {
         // save updated notes
         titles[i] = title;
@@ -168,20 +165,19 @@ function saveEdit(i) {
     }
 }
 
-// Notizen in Ordner "Trash" verschieben
+// move notes to trash folder
 function moveToTrash(i) {
-    // Titel und Text der Notiz in Array "trash" hinzufügen ( Array "trash" enthält je eine Notiz als Arrays ). Ev auch Notiz selber als mehrdimensionales Array speichern (später).
-    trash.push( [titles[i], notes[i]] );
-    // Titel und Text aus den Arrays "titles", "notes" entfernen
+    // add note to array "trash"
+    trash.unshift( [titles[i], notes[i]] );
+    // remove note from notes array
     titles.splice(i,1);
     notes.splice(i,1);
-    // Notizen mit aktualisierten Daten neu laden
+    // load content with updated data & save updated data
     init();
-    // Aktualisierte Daten speichern
     save();
 }
 
-// Den Trash (Notes) Ordner anzeigen / Trash view wechseln
+// toggle between trash and notes view
 function showTrash() {
     if (trashView) {
         trashView = false;
@@ -191,7 +187,7 @@ function showTrash() {
     init();
 }
 
-// Notiz endgültig löschen
+// delete note permanently
 function deleteNote(i){
     trash.splice(i,1);
     init();
@@ -200,8 +196,8 @@ function deleteNote(i){
 
 
 function restoreNote(i) {
-    titles.push(trash[i][0]);
-    notes.push(trash[i][1]);
+    titles.unshift(trash[i][0]);
+    notes.unshift(trash[i][1]);
 
     trash.splice(i, 1);
 
@@ -209,32 +205,31 @@ function restoreNote(i) {
     save();
 }
 
-// Daten im Local Storage abspeichern
+// save data into local storage
 function save() {
-    // Arrays in String umwandeln
+    // convert arrays to string
     let titlesAsString = JSON.stringify(titles);
     let notesAsString = JSON.stringify(notes);
     let trashAsString = JSON.stringify(trash);
 
-    // Strings im local storage speichern
+    // save strings in local storage
     localStorage.setItem('titles', titlesAsString);
     localStorage.setItem('text', notesAsString);
     localStorage.setItem('trash', trashAsString);
 }
 
-// Daten aus Local Storage holen
+// load data from local storage
 function load() {
-    // Strings aus Local Storage holen
+    // get as strings
     let titlesAsString = localStorage.getItem('titles');
     let notesAsString = localStorage.getItem('text');
     let trashAsString = localStorage.getItem('trash');
-
-    // Strings parsen (umwandeln) und in Arrays "titles" & "notes" speichern
+    // if data exists, parse strings and  save tem in arrays "titles" & "notes" speichern
     if( titlesAsString && notesAsString) {
         titles = JSON.parse(titlesAsString);
         notes = JSON.parse(notesAsString);
     }
-    // "trash"
+    // save trash if data exists
     if( trashAsString ) {
         trash = JSON.parse(trashAsString);
     }
@@ -242,9 +237,8 @@ function load() {
 }
 
 function openTextInput() {
-    // textfeld für note-text eingabe öffnen
+    // open textfield 
     document.getElementById('text').classList.remove('hidden');
-    // document.getElementsByClassName('form-buttons').classList.remove('hidden'); // warum geht das nicht ?? (nur ein form-buttons-element vorhanden??)
-    document.getElementById('buttons').classList.remove('hidden'); // aber das schon?
+    document.getElementById('buttons').classList.remove('hidden');
     document.getElementById('title').placeholder = 'Titel';
 }
