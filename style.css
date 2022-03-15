@@ -95,9 +95,13 @@ button:hover {
     transform: scale(1.5);
 }
 
-.card:hover {
+.notes-container .card:hover {
     transform: scale(1.05);
     box-shadow: 1px 1px 6px 1px rgb(0, 0, 0);
+}
+
+.overlay .card:hover{
+    transform: scale(1.02);
 }
 
 #content{
@@ -111,6 +115,26 @@ button:hover {
 ev bessere Lösung?*/
 .footer-space {
     height: 80px; /* Footer - Höhe plus Padding plus Margin-bottom oberer Container*/
+}
+
+.overlay {
+    position: fixed;
+    top: 0;
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1;
+    background-color: rgba(28, 43, 56, 0.9);
+}
+
+.edit-card {
+    /* max-width: unset; */
+    min-width: 40vw;
+    max-width: 80vw;
+    box-shadow: 0 0 3px 1.3px yellow;
+    padding: 32px;    
 }
 
 footer{

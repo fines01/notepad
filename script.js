@@ -29,10 +29,25 @@ function noteTemplate(i) {
             <p>${notes[i]}</p>
             <div class="">
                 <button onclick="moveToTrash(${i})">Löschen</button>
-                <button onclick="editNote(${i})">Ändern</button>
+                <button onclick="openEdit(${i})">Ändern</button>
             </div>
         </div>
     `;
+}
+
+function editNoteTemplate(i) {
+    return /*html*/ `
+        <div class="form-container" id="">
+            <div class="card edit-card">
+            <input onclick="" id="edit-title" type="text" value="${titles[i]}" placeholder="Neue Notiz..." />
+            <textarea id="edit-text" class="" rows="" placeholder="Notiz...">${notes[i]}</textarea>
+            <div id="buttons" class="form-buttons">
+                <button onclick="saveEdit(${i})">Speichern</button>
+                <button onclick="closeEdit()">Verwerfen</button>
+            </div>
+            </div>
+        </div>
+    `
 }
 
 // render
@@ -57,6 +72,11 @@ function renderNotesView(content, form, navLink) {
     }
 }
 
+function renderEditForm(i) {
+    let overlay = document.getElementById('overlay');
+    overlay.innerHTML = editNoteTemplate(i);
+}
+
 function init() {
     
     let content = document.getElementById('content');
@@ -75,7 +95,7 @@ function init() {
 }
 
 
-function saveNote() {
+function saveNote () {
     let title = document.getElementById('title').value;
     let text = document.getElementById('text').value;
 
@@ -84,7 +104,7 @@ function saveNote() {
         titles.push(title);
         notes.push(text);
 
-        // input fields leeren AAAAAAAH
+        // input fields leeren 
         title = ''; // warum geht das nicht? (weder mit .value, .innerHTML oder sonstwie aber in Kontaktbuch fkt. es so?)
         text = '';
         clearInput(); // aber das geht?
@@ -117,11 +137,35 @@ function clearInput() {
     init();
 }
 
-function editNote(i){
-    alert(`Sorry, you can't edit me (yet?)`);
-    // 1. Formular ähnl add-note öffnen, mit values aus gespeichertem Array
-    //--> in overlay (editNoteTemplate basteln)
-    // 2. speichern --> Array-element an der jew Position mit neuem Wert ersetzen
+function openEdit(i){
+    // open edit form
+    let overlay = document.getElementById('overlay');
+    overlay.classList.remove('hidden');
+    // render form with values for specified note
+    renderEditForm(i);
+}
+
+function closeEdit() {
+    let overlay = document.getElementById('overlay');
+    overlay.classList.add('hidden');
+}
+
+function saveEdit(i) {
+    let title = document.getElementById('edit-title').value;
+    let text = document.getElementById('edit-text').value;
+    // Checken ob Titel- und Textfeld values enthalten
+    if (title && text) {
+        // save updated notes
+        titles[i] = title;
+        notes[i] = text;
+        save();
+        init();
+        closeEdit();
+    } else {
+        // something
+        alert('fill out both values');
+        // fkt blink
+    }
 }
 
 // Notizen in Ordner "Trash" verschieben
