@@ -25,8 +25,8 @@ function trashNoteTemplate(i) {
 function noteTemplate(i) {
     return /*html*/ `
         <div class="card">
-            <h3>${titles[i]}</h3>
-            <p>${notes[i]}</p>
+            <h3>${notes[i][0]}</h3>
+            <p>${notes[i][1]}</p>
             <div class="">
                 <button onclick="moveToTrash(${i})">Löschen</button>
                 <button onclick="openEdit(${i})">Ändern</button>
@@ -39,8 +39,8 @@ function editNoteTemplate(i) {
     return /*html*/ `
         <div class="form-container" id="">
             <div class="card edit-card">
-            <input onclick="" id="edit-title" type="text" value="${titles[i]}" placeholder="Neue Notiz..." />
-            <textarea id="edit-text" class="" rows="" placeholder="Notiz...">${notes[i]}</textarea>
+            <input onclick="" id="edit-title" type="text" value="${notes[i][0]}" placeholder="Neue Notiz..." />
+            <textarea id="edit-text" class="" rows="" placeholder="Notiz...">${notes[i][1]}</textarea>
             <div id="buttons" class="form-buttons">
                 <button onclick="saveEdit(${i})">Speichern</button>
                 <button onclick="closeEdit()">Verwerfen</button>
@@ -79,7 +79,6 @@ function renderTrashView(content, form, navLink) {
 }
 
 function renderNotesView(content, form, navLink) {
-    // generate HTML
     navLink.innerHTML = 'Trash';
     // display new-note form
     form.classList.remove('hidden');
@@ -99,8 +98,7 @@ function saveNote () {
 
     // validate if both title and text fields contain values
     if (title && text){
-        titles.unshift(title);
-        notes.unshift(text);
+        notes.unshift([title, text]);
 
         // empty input fields leeren 
         title = ''; // warum geht das nicht? (weder mit .value, .innerHTML oder sonstwie aber in Kontaktbuch fkt. es so?)
@@ -153,8 +151,8 @@ function saveEdit(i) {
     // validate if both title and text fields contain values
     if (title && text) {
         // save updated notes
-        titles[i] = title;
-        notes[i] = text;
+        notes[i][0] = title;
+        notes[i][1] = text;
         save();
         init();
         closeEdit();
@@ -168,9 +166,8 @@ function saveEdit(i) {
 // move notes to trash folder
 function moveToTrash(i) {
     // add note to array "trash"
-    trash.unshift( [titles[i], notes[i]] );
+    trash.unshift( notes[i] );
     // remove note from notes array
-    titles.splice(i,1);
     notes.splice(i,1);
     // load content with updated data & save updated data
     init();
@@ -196,11 +193,8 @@ function deleteNote(i){
 
 
 function restoreNote(i) {
-    titles.unshift(trash[i][0]);
-    notes.unshift(trash[i][1]);
-
+    notes.unshift(trash[i]);
     trash.splice(i, 1);
-
     init();
     save();
 }
@@ -208,32 +202,30 @@ function restoreNote(i) {
 // save data into local storage
 function save() {
     // convert arrays to string
-    let titlesAsString = JSON.stringify(titles);
     let notesAsString = JSON.stringify(notes);
     let trashAsString = JSON.stringify(trash);
 
     // save strings in local storage
-    localStorage.setItem('titles', titlesAsString);
-    localStorage.setItem('text', notesAsString);
+    localStorage.setItem('notes', notesAsString);
     localStorage.setItem('trash', trashAsString);
 }
+
+//delete data from local storage
+// localStorage.removeItem();
 
 // load data from local storage
 function load() {
     // get as strings
-    let titlesAsString = localStorage.getItem('titles');
-    let notesAsString = localStorage.getItem('text');
+    let notesAsString = localStorage.getItem('notes');
     let trashAsString = localStorage.getItem('trash');
     // if data exists, parse strings and  save tem in arrays "titles" & "notes" speichern
-    if( titlesAsString && notesAsString) {
-        titles = JSON.parse(titlesAsString);
+    if( notesAsString) {
         notes = JSON.parse(notesAsString);
     }
     // save trash if data exists
     if( trashAsString ) {
         trash = JSON.parse(trashAsString);
     }
-
 }
 
 function openTextInput() {
