@@ -4,65 +4,77 @@ let notes = [];
 let trash = [];
 let trashView = false;
 
-// Variablen aus Local Storage holen und in Arrays speichern;
+// get variables from local storage and save thim in arrays above
 load();
 
-// Funktion render() beim Laden des Bodies ausführen, lädt Daten samt HTML Content der Notizen
-function render() {
-    // Div in welcher die Karten angezeigt werden sollen in Variable "content" speichern
+// HTML TEMPLATES
+
+function trashNoteTemplate(i) {
+    return /*html*/ `
+        <div class="card">
+            <h3>${trash[i][0]}</h3>
+            <p>${trash[i][1]}</p>
+            <div class="">
+                <button class="delete-btn" onclick="deleteNote(${i})">Löschen</button>
+                <button onclick="restoreNote(${i})">Wiederherstellen</button>
+            </div>
+        </div>
+    `;
+}
+
+function noteTemplate(i) {
+    return /*html*/ `
+        <div class="card">
+            <h3>${titles[i]}</h3>
+            <p>${notes[i]}</p>
+            <div class="">
+                <button onclick="moveToTrash(${i})">Löschen</button>
+                <button onclick="editNote(${i})">Ändern</button>
+            </div>
+        </div>
+    `;
+}
+
+// render
+
+function renderTrashView(content, form, navLink) {
+    navLink.innerHTML = 'Notes';
+    // hide note form 
+    form.classList.add('hidden');
+    // generate HTML
+    for (let i = 0; i < trash.length; i++) {
+        content.innerHTML += trashNoteTemplate(i);
+    }
+}
+
+function renderNotesView(content, form, navLink) {
+    // generate HTML
+    navLink.innerHTML = 'Trash';
+    // display new-note form
+    form.classList.remove('hidden');
+    for (let i = 0; i < notes.length; i++) {
+        content.innerHTML += noteTemplate(i);
+    }
+}
+
+function init() {
+    
     let content = document.getElementById('content');
     let form = document.getElementById('add-note');
     let navLink = document.getElementById('link');
-
-    // Alten HTML Code löschen
-    content.innerHTML = '';
-
-    if (trashView){
-        // Nav-Link Text anpassen
-        navLink.innerHTML = 'Notes';
-        // Notiz-Formular ausblenden
-        form.classList.add('hidden');
-        // HTML generieren
-        for (let i = 0; i < trash.length; i++) {
-            content.innerHTML += /*html*/ `
-                <div class="card">
-                    <h3>${trash[i][0]}</h3>
-                    <p>${trash[i][1]}</p>
-                    <div class="">
-                        <button class="delete-btn" onclick="deleteNote(${i})">Löschen</button>
-                        <button onclick="restoreNote(${i})">Wiederherstellen</button>
-                    </div>
-                </div>
-            `;
-        }
-        // ENDE: For-Schleife
-    }
-    // ENDE: If-Block
-    else {
-        // HTML generieren
-        navLink.innerHTML = 'Trash';
-        // Formular einblenden
-        form.classList.remove('hidden');
-        for (let i = 0; i < notes.length; i++) {
-            content.innerHTML += /*html*/ `
-            <div class="card">
-                <h3>${titles[i]}</h3>
-                <p>${notes[i]}</p>
-                <div class="">
-                    <button onclick="moveToTrash(${i})">Löschen</button>
-                    <button onclick="editNote(${i})">Ändern</button>
-                </div>
-            </div>
-        `;
-        }
-        //ENDE: For-Schleife
-    }
-    //ENDE: Else-Block
     
+    // delete old HTML code
+    content.innerHTML = '';
+    
+    if (trashView){
+        renderTrashView(content, form, navLink);
+    }
+    else {
+        renderNotesView(content, form, navLink);
+    }
 }
-// ENDE: Funktion render()
 
-//
+
 function saveNote() {
     let title = document.getElementById('title').value;
     let text = document.getElementById('text').value;
@@ -78,7 +90,7 @@ function saveNote() {
         clearInput(); // aber das geht?
 
         // HTML-Inhalt mit aktualisierten Daten neu laden
-        render();
+        init();
         // Aktualisierte Daten speichern
         save();
     }
@@ -102,12 +114,13 @@ function clearInput() {
     title.value = '';
     text.value = '';
 
-    render();
+    init();
 }
 
 function editNote(i){
     alert(`Sorry, you can't edit me (yet?)`);
     // 1. Formular ähnl add-note öffnen, mit values aus gespeichertem Array
+    //--> in overlay (editNoteTemplate basteln)
     // 2. speichern --> Array-element an der jew Position mit neuem Wert ersetzen
 }
 
@@ -119,11 +132,10 @@ function moveToTrash(i) {
     titles.splice(i,1);
     notes.splice(i,1);
     // Notizen mit aktualisierten Daten neu laden
-    render();
+    init();
     // Aktualisierte Daten speichern
     save();
 }
-// ENDE: Funktion trash()
 
 // Den Trash (Notes) Ordner anzeigen / Trash view wechseln
 function showTrash() {
@@ -132,17 +144,16 @@ function showTrash() {
     } else {
         trashView = true;
     }
-    render();
+    init();
 }
-// ENDE Funktion showTrash()
 
 // Notiz endgültig löschen
 function deleteNote(i){
     trash.splice(i,1);
-    render();
+    init();
     save();
 }
-// ENDE Funktion deleteNote()
+
 
 function restoreNote(i) {
     titles.push(trash[i][0]);
@@ -150,10 +161,9 @@ function restoreNote(i) {
 
     trash.splice(i, 1);
 
-    render();
+    init();
     save();
 }
-// ENDE Funftion restoreNote()
 
 // Daten im Local Storage abspeichern
 function save() {
@@ -167,7 +177,6 @@ function save() {
     localStorage.setItem('text', notesAsString);
     localStorage.setItem('trash', trashAsString);
 }
-// ENDE: Funktion save()
 
 // Daten aus Local Storage holen
 function load() {
@@ -187,7 +196,6 @@ function load() {
     }
 
 }
-// ENDE: funktion load()
 
 function openTextInput() {
     // textfeld für note-text eingabe öffnen
