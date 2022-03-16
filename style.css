@@ -34,7 +34,7 @@ nav a {
 
 nav a:hover {
     color: gray;
-    /*transform: scale(1.1); /* geht nicht? */
+    /*transform: scale(1.1); /* gn? */
     /*font-size: 1.1em; /* nicht flüssig */
 }
 
@@ -55,7 +55,9 @@ nav a:hover {
     padding: 24px;
     margin: 16px;
     transition: all 300ms; /* transform flüssiger ablaufen lassen*/
-    max-width: 250px;
+    max-width: 50vw;
+    overflow-wrap:break-word;
+    overflow: hidden;
     /* width: 150px; */
 }
 
@@ -68,6 +70,8 @@ input, textarea, button{
     border-color: transparent;
     margin: 4px;
     outline: none;
+    font-size: 1rem;
+    font-family: inherit;
 }
 
 button {
@@ -131,10 +135,18 @@ ev bessere Lösung?*/
 
 .edit-card {
     /* max-width: unset; */
-    min-width: 40vw;
+    /* min-width: 40vw; */
     max-width: 80vw;
-    box-shadow: 0 0 3px 1.3px yellow;
+    box-shadow: 0 0 5px 1.5px yellow;
     padding: 32px;    
+}
+
+.edit-card textarea {
+    min-height: 15vh;
+}
+
+.edit-card input {
+    height: 24px;
 }
 
 footer{
@@ -154,7 +166,7 @@ footer{
 footer a {
     text-decoration: none;
     color: white;
-    margin: 8px;
+    margin: 16px;
 }
 
 footer a:hover, footer span:hover{
@@ -168,4 +180,59 @@ footer a:hover, footer span:hover{
 .delete-btn{
     border: 2px solid orange
 }
+
+/* media queries */
+
+@media(max-width: 650px) {
+
+    #content {
+        /* justify-content: center; */
+        margin: 24px;
+    }
+
+    .navbar {
+        font-size: 0.95rem;
+    }
+
+    .info {
+        font-size: 0.7rem;
+        position: absolute;
+        top: 82px;
+        right: 0px;
+        color: white;
+    }
+
+    .card input, textarea, button {
+        font-size: 0.9rem;
+    }
+
+    .form-container .card:not(.edit-card):hover {
+        transform: scale(1.3);
+    }
+}
+
+@media(max-width: 400px) {
+
+    .buttons {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+    }
+}
+
+@media(max-width: 300px) {
+    .navbar, footer {
+        font-size: 0.9rem;
+    }
+
+    .card, input, textarea, button {
+        font-size: 0.8rem;
+    }
+
+     .form-container .card:not(.edit-card):hover {
+         transform: scale(1.2);
+     }
+}
+
+/* animations */
 

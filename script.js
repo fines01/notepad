@@ -1,11 +1,9 @@
-let titles = [];
 let notes = [];
 let trash = [];
 let trashView = false;
 
 // get variables from local storage and save thim in arrays above
 load();
-
 
 // HTML TEMPLATES
 
@@ -14,7 +12,7 @@ function trashNoteTemplate(i) {
         <div class="card">
             <h3>${trash[i][0]}</h3>
             <p>${trash[i][1]}</p>
-            <div class="">
+            <div class="buttons">
                 <button class="delete-btn" onclick="deleteNote(${i})">Löschen</button>
                 <button onclick="restoreNote(${i})">Wiederherstellen</button>
             </div>
@@ -27,7 +25,7 @@ function noteTemplate(i) {
         <div class="card">
             <h3>${notes[i][0]}</h3>
             <p>${notes[i][1]}</p>
-            <div class="">
+            <div class="buttons">
                 <button onclick="moveToTrash(${i})">Löschen</button>
                 <button onclick="openEdit(${i})">Ändern</button>
             </div>
@@ -41,7 +39,7 @@ function editNoteTemplate(i) {
             <div class="card edit-card">
             <input onclick="" id="edit-title" type="text" value="${notes[i][0]}" placeholder="Neue Notiz..." />
             <textarea id="edit-text" class="" rows="" placeholder="Notiz...">${notes[i][1]}</textarea>
-            <div id="buttons" class="form-buttons">
+            <div id="buttons" class="buttons form-buttons">
                 <button onclick="saveEdit(${i})">Speichern</button>
                 <button onclick="closeEdit()">Verwerfen</button>
             </div>
@@ -66,7 +64,6 @@ function init() {
         renderNotesView(content, form, navLink);
     }
 }
-
 
 function renderTrashView(content, form, navLink) {
     navLink.innerHTML = 'Notes';
@@ -95,16 +92,13 @@ function renderEditForm(i) {
 function saveNote () {
     let title = document.getElementById('title').value;
     let text = document.getElementById('text').value;
-
     // validate if both title and text fields contain values
     if (title && text){
         notes.unshift([title, text]);
-
         // empty input fields leeren 
         title = ''; // warum geht das nicht? (weder mit .value, .innerHTML oder sonstwie aber in Kontaktbuch fkt. es so?)
         text = '';
         clearInput(); // aber das geht?
-
         // render HTML with updated data
         init();
         // save updated values
@@ -191,7 +185,6 @@ function deleteNote(i){
     save();
 }
 
-
 function restoreNote(i) {
     notes.unshift(trash[i]);
     trash.splice(i, 1);
@@ -204,7 +197,6 @@ function save() {
     // convert arrays to string
     let notesAsString = JSON.stringify(notes);
     let trashAsString = JSON.stringify(trash);
-
     // save strings in local storage
     localStorage.setItem('notes', notesAsString);
     localStorage.setItem('trash', trashAsString);
