@@ -72,6 +72,11 @@ input, textarea, button{
     outline: none;
     font-size: 1rem;
     font-family: inherit;
+    transition: blink 330ms ease-in-out;
+}
+
+.blink {
+    animation: blink  255ms ease-in-out infinite;
 }
 
 button {
@@ -96,7 +101,7 @@ button:hover {
 }
 
 .form-container .card:hover{
-    transform: scale(1.5);
+    transform: scale(1.4);
 }
 
 .notes-container .card:hover {
@@ -235,4 +240,18 @@ footer a:hover, footer span:hover{
 }
 
 /* animations */
+@keyframes blink {
+    0% {
+        outline: 7px solid transparent;
+    }
+
+    50% {
+        /* rgb(255, 102, 0); */
+        outline: 1px solid rgb(255, 174, 0);
+    }
+
+    100% {
+        outline: 1px solid transparent;
+    }
+}
 

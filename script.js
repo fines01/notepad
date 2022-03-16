@@ -90,38 +90,38 @@ function renderEditForm(i) {
 }
 
 function saveNote () {
-    let title = document.getElementById('title').value;
-    let text = document.getElementById('text').value;
+    let title = document.getElementById('title');
+    let text = document.getElementById('text');
     // validate if both title and text fields contain values
-    if (title && text){
-        notes.unshift([title, text]);
-        // empty input fields leeren 
-        title = ''; // warum geht das nicht? (weder mit .value, .innerHTML oder sonstwie aber in Kontaktbuch fkt. es so?)
-        text = '';
-        clearInput(); // aber das geht?
+    if (title.value && text.value){
+        notes.unshift([title.value, text.value]);
+        // empty input fields
+        clearInput(); // [title.value = ''; gn! aber das geht?]
         // render HTML with updated data
         init();
         // save updated values
         save();
     }
     else{
-        alert('Keine leeren Felder');
+        outlineBlink([title,text]);
     }
 }
 
 function clearInput() {
-    let title = document.getElementById('title');
-    let text = document.getElementById('text');
+    let titleField = document.getElementById('title');
     let inputField = document.getElementById('text');
     let formButtons = document.getElementById('buttons'); // ...
 
     inputField.classList.add('hidden');
     formButtons.classList.add('hidden');
 
-    title.placeholder='Neue Notiz...';
+    inputField.classList.remove('blink');
+    titleField.classList.remove('blink');
 
-    title.value = '';
-    text.value = '';
+    titleField.placeholder='Neue Notiz...';
+
+    titleField.value = '';
+    inputField.value = '';
 
     init();
 }
@@ -140,20 +140,18 @@ function closeEdit() {
 }
 
 function saveEdit(i) {
-    let title = document.getElementById('edit-title').value;
-    let text = document.getElementById('edit-text').value;
+    let title = document.getElementById('edit-title');
+    let text = document.getElementById('edit-text');
     // validate if both title and text fields contain values
-    if (title && text) {
+    if (title.value && text.value) {
         // save updated notes
-        notes[i][0] = title;
-        notes[i][1] = text;
+        notes[i][0] = title.value;
+        notes[i][1] = text.value;
         save();
         init();
         closeEdit();
     } else {
-        // something
-        alert('fill out both values');
-        // fkt blink
+        outlineBlink([title,text]);
     }
 }
 
@@ -202,9 +200,6 @@ function save() {
     localStorage.setItem('trash', trashAsString);
 }
 
-//delete data from local storage
-// localStorage.removeItem();
-
 // load data from local storage
 function load() {
     // get as strings
@@ -225,4 +220,19 @@ function openTextInput() {
     document.getElementById('text').classList.remove('hidden');
     document.getElementById('buttons').classList.remove('hidden');
     document.getElementById('title').placeholder = 'Titel';
+}
+
+// add and remove blink animation to given field if input field has an empty value
+function outlineBlink(inputFields){
+    // check for empty values in passed inputs
+    for (i=0; i<inputFields.length; i++){
+        if (!inputFields[i].value){
+            let element = inputFields[i];
+            // add and remove css class
+            element.classList.add('blink');
+            setTimeout(function () {
+                element.classList.remove('blink');
+            }, 900);
+        }
+    }
 }
