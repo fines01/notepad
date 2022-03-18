@@ -114,15 +114,13 @@ button:hover {
 }
 
 #content{
-    /* margin: 32px; */
+    margin: 32px;
     display: flex;
-    justify-content: space-evenly;
+    /* justify-content: space-evenly; */
     flex-wrap: wrap;
     gap: 1rem;
 }
 
-/* Div um Platz im Body zu machen damit der absolut positionierte Footer (kein Plz im Body da aus document flow herausgenommen) immer unten bleibt: 
-ev bessere Lösung?*/
 .footer-space {
     height: 80px; /* Footer - Höhe plus Padding plus Margin-bottom oberer Container*/
 }
@@ -140,8 +138,6 @@ ev bessere Lösung?*/
 }
 
 .edit-card {
-    /* max-width: unset; */
-    /* min-width: 40vw; */
     max-width: 80vw;
     box-shadow: 0 0 5px 1.5px yellow;
     padding: 32px;    
@@ -188,6 +184,12 @@ footer a:hover, footer span:hover{
 }
 
 /* media queries */
+@media(max-width: 700px) {
+    #content {
+        /* margin: 32px 0; */
+        justify-content: space-evenly;
+    }
+}
 
 @media(max-width: 650px) {
 
@@ -196,7 +198,7 @@ footer a:hover, footer span:hover{
     }
 
     #content {
-        margin: 24px;
+        margin: 24px 8px;
     }
 
     .navbar {
@@ -229,7 +231,6 @@ footer a:hover, footer span:hover{
     }
 
 }
-
 
 @media(max-width: 300px) {
 
