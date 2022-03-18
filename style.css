@@ -221,8 +221,13 @@ footer a:hover, footer span:hover{
     }
 
     .form-container .card:not(.edit-card):hover {
-        transform: scale(1.3);
+        transform: scale(1.2);
     }
+
+    .form-container input{
+        padding: 0.5px 1px;
+    }
+
 }
 
 
@@ -243,8 +248,13 @@ footer a:hover, footer span:hover{
     }
 
      .form-container .card:not(.edit-card):hover {
-         transform: scale(1.2);
+         transform: scale(1.1);
      }
+
+      .form-container .card {
+          padding: 0.3rem;
+          max-width: 190px;
+      }
 }
 
 /* animations */

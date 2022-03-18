@@ -114,6 +114,7 @@ function clearInput() {
 
     inputField.classList.add('hidden');
     formButtons.classList.add('hidden');
+    formButtons.style.display='none';
 
     inputField.classList.remove('blink');
     titleField.classList.remove('blink');
@@ -219,6 +220,7 @@ function openTextInput() {
     // open textfield 
     document.getElementById('text').classList.remove('hidden');
     document.getElementById('buttons').classList.remove('hidden');
+    document.getElementById('buttons').style.display='inline-block';
     document.getElementById('title').placeholder = 'Titel';
 }
 
