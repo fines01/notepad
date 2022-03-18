@@ -236,3 +236,5 @@ function outlineBlink(inputFields){
         }
     }
 }
+
+// TODO: err in small sizes: btn des formulars sichtbar auch im eingeklappten Zustand !!
